@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>wait</title>
+		<meta charset='utf-8'>
+	</head>
+	<body>
+		<script src="wait.js"></script>
+		<script>
+			var d = new Date().getTime();
+			new Wait()
+			.register(function () {
+				console.log("First test","Time since start: ", new Date().getTime() - d);
+			})
+			.setCheckTime(1000)
+			.register(function () {
+				console.log("Second test","Time since start: ", new Date().getTime() - d);
+				d = new Date().getTime();
+			})
+			.setCheckTime(8)
+			.register(function () {
+				console.log("Thirds test","Time since last test: ", new Date().getTime() - d);
+			}, function () {
+				return new Date().getTime() - d > 1000;
+			})
+			.start();
+		</script>
+	</body>
+</html>
