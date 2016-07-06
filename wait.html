@@ -7,21 +7,40 @@
 	<body>
 		<script src="wait.js"></script>
 		<script>
-			var d = new Date().getTime();
-			new Wait()
+		var d = new Date().getTime();
+		var w = new Wait()
+			//generate some errors
+			.displayErrors(0)
+			.start()
+			.register("I fail because of my callback")
 			.register(function () {
-				console.log("First test","Time since start: ", new Date().getTime() - d);
+				console.log("I fail because of my condition")
+			}, false)
+			.setCheckTime("24")
+			.setCheckTime(0 - 1)
+			//Register the actual queue
+			.register(function () {
+				console.log("First test", "Time since start: ", new Date().getTime() - d);
 			})
 			.setCheckTime(1000)
 			.register(function () {
-				console.log("Second test","Time since start: ", new Date().getTime() - d);
+				console.log("Second test", "Time since start: ", new Date().getTime() - d);
 				d = new Date().getTime();
 			})
 			.setCheckTime(8)
 			.register(function () {
-				console.log("Thirds test","Time since last test: ", new Date().getTime() - d);
+				console.log("Third test", "Time since last test: ", new Date().getTime() - d);
+				d = new Date().getTime();
 			}, function () {
 				return new Date().getTime() - d > 1000;
+			})
+			.register(function () {
+				console.log("Fourth test", "Time since last test: ", new Date().getTime() - d);
+				d = new Date().getTime();
+			})
+			.register(function () {
+				console.log("Fifth test", "Time since last test: ", new Date().getTime() - d);
+				d = new Date().getTime();
 			})
 			.start();
 		</script>
