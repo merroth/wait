@@ -25,7 +25,7 @@ class Wait {
 	public err = this.displayErrors;
 	//Log function
 	private log(message: string = "") {
-		if (this.logErrors == true) {
+		if (this.logErrors === true) {
 			console.warn(message);
 		}
 	}
@@ -96,7 +96,7 @@ class Wait {
 		}
 		if (typeof condition != "function") {
 			if (typeof condition == "boolean") {
-				if (condition == true) {
+				if (condition === true) {
 					condition = function () { return true; }
 				} else {
 					this.log("'register' argument 'condition' of type 'boolean' must be true");

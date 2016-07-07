@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>wait</title>
+		<meta charset='utf-8'>
+	</head>
+	<body>
+		<script src="wait.js"></script>
+		<script>
+		var d = new Date().getTime();
+		var w = new Wait()
+			//generate some errors
+			.err(0)
+			.start()
+			.r("I fail because of my callback")
+			.r(function () {
+				console.log("I fail because of my condition")
+			}, false)
+			.t("24")
+			.t(0 - 1)
+			//Register the actual queue
+			.r(function () {
+				console.log("First test", "Time since start: ", new Date().getTime() - d);
+			})
+			.t(1000)
+			.r(function () {
+				console.log("Second test", "Time since start: ", new Date().getTime() - d);
+				d = new Date().getTime();
+			})
+			.t(8)
+			.r(function () {
+				console.log("Third test", "Time since last test: ", new Date().getTime() - d);
+				d = new Date().getTime();
+			}, function () {
+				return new Date().getTime() - d > 1000;
+			})
+			.r(function () {
+				console.log("Fourth test", "Time since last test: ", new Date().getTime() - d);
+				d = new Date().getTime();
+			})
+			.r(function () {
+				console.log("Fifth test", "Time since last test: ", new Date().getTime() - d);
+				d = new Date().getTime();
+			})
+			.start();
+		</script>
+	</body>
+</html>

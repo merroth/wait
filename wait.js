@@ -29,7 +29,7 @@ var Wait = (function () {
     //Log function
     Wait.prototype.log = function (message) {
         if (message === void 0) { message = ""; }
-        if (this.logErrors == true) {
+        if (this.logErrors === true) {
             console.warn(message);
         }
     };
@@ -89,7 +89,7 @@ var Wait = (function () {
         }
         if (typeof condition != "function") {
             if (typeof condition == "boolean") {
-                if (condition == true) {
+                if (condition === true) {
                     condition = function () { return true; };
                 }
                 else {
