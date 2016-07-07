@@ -21,6 +21,8 @@ class Wait {
 		this.logErrors = v;
 		return this;
 	}
+	//Shorthand for displayErrors
+	public err = this.displayErrors;
 	//Log function
 	private log(message: string = "") {
 		if (this.logErrors == true) {
@@ -51,6 +53,8 @@ class Wait {
 		//Return this for chaining
 		return this;
 	}
+	//Shorthand for setCheckTime
+	public t = this.setCheckTime;
 	//The queue of tasks, a list of tasks following the "Iqueue" format.
 	private queue: Iqueue[] = [];
 	//The timeout handle ensures that we can stop the queue at any time.
@@ -111,6 +115,8 @@ class Wait {
 		//return this for chaining
 		return this;
 	}
+	//Shorthand for register
+	public r = this.register;
 	//This starts the execution of the queue.
 	//Notice that this will clear the timeout handle to ensure only one process is running.
 	//Returns true if a queue was started and false if no queue items exists.

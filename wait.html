@@ -10,35 +10,35 @@
 		var d = new Date().getTime();
 		var w = new Wait()
 			//generate some errors
-			.displayErrors(0)
+			.err(0)
 			.start()
-			.register("I fail because of my callback")
-			.register(function () {
+			.r("I fail because of my callback")
+			.r(function () {
 				console.log("I fail because of my condition")
 			}, false)
-			.setCheckTime("24")
-			.setCheckTime(0 - 1)
+			.t("24")
+			.t(0 - 1)
 			//Register the actual queue
-			.register(function () {
+			.r(function () {
 				console.log("First test", "Time since start: ", new Date().getTime() - d);
 			})
-			.setCheckTime(1000)
-			.register(function () {
+			.t(1000)
+			.r(function () {
 				console.log("Second test", "Time since start: ", new Date().getTime() - d);
 				d = new Date().getTime();
 			})
-			.setCheckTime(8)
-			.register(function () {
+			.t(8)
+			.r(function () {
 				console.log("Third test", "Time since last test: ", new Date().getTime() - d);
 				d = new Date().getTime();
 			}, function () {
 				return new Date().getTime() - d > 1000;
 			})
-			.register(function () {
+			.r(function () {
 				console.log("Fourth test", "Time since last test: ", new Date().getTime() - d);
 				d = new Date().getTime();
 			})
-			.register(function () {
+			.r(function () {
 				console.log("Fifth test", "Time since last test: ", new Date().getTime() - d);
 				d = new Date().getTime();
 			})

@@ -5,11 +5,17 @@ var Wait = (function () {
     function Wait() {
         //Switch for displaying errors. Default is true
         this.logErrors = true;
+        //Shorthand for displayErrors
+        this.err = this.displayErrors;
         //Minimum ms between checks
         //Defaults to 2 checks per standard 60 fps frame
         this.checkTime = 8;
+        //Shorthand for setCheckTime
+        this.t = this.setCheckTime;
         //The queue of tasks, a list of tasks following the "Iqueue" format.
         this.queue = [];
+        //Shorthand for register
+        this.r = this.register;
     }
     //Setter for logErrors
     Wait.prototype.displayErrors = function (v) {
