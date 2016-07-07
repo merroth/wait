@@ -1,2 +1,2 @@
 # wait
-TypeScript Queue framework
+TypeScript / JavaScript asynchronous queue framework
