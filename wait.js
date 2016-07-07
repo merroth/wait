@@ -33,7 +33,7 @@ var Wait = (function () {
     };
     //Setter for checkTime
     Wait.prototype.setCheckTime = function (time) {
-        if (time === void 0) { time = 8; }
+        if (time === void 0) { time = this.checkTime; }
         //Time must be a number
         if (typeof time != "number") {
             this.log("'setCheckTime' only takes type 'number' arguments, argument of type '" + typeof time + "' is not allowed");
