@@ -1,48 +1,102 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>wait</title>
-		<meta charset='utf-8'>
-	</head>
-	<body>
-		<script src="wait.js"></script>
-		<script>
-		var d = new Date().getTime();
-		var w = new Wait()
-			//generate some errors
-			.err(0)
-			.start()
-			.r("I fail because of my callback")
-			.r(function () {
-				console.log("I fail because of my condition")
-			}, false)
-			.t("24")
-			.t(0 - 1)
-			//Register the actual queue
-			.r(function () {
-				console.log("First test", "Time since start: ", new Date().getTime() - d);
-			})
-			.t(1000)
-			.r(function () {
-				console.log("Second test", "Time since start: ", new Date().getTime() - d);
-				d = new Date().getTime();
-			})
-			.t(8)
-			.r(function () {
-				console.log("Third test", "Time since last test: ", new Date().getTime() - d);
-				d = new Date().getTime();
-			}, function () {
-				return new Date().getTime() - d > 1000;
-			})
-			.r(function () {
-				console.log("Fourth test", "Time since last test: ", new Date().getTime() - d);
-				d = new Date().getTime();
-			})
-			.r(function () {
-				console.log("Fifth test", "Time since last test: ", new Date().getTime() - d);
-				d = new Date().getTime();
-			})
-			.start();
+
+<head>
+	<title>wait</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+	<script src="wait.js"></script>
+	<script>
+			var ourWaiter = (function(w) {
+				var d = new Date().getTime();
+				var w; //A handle for our queue
+				var test = false; //A variable we change later
+				w = new Wait()
+				//generate some errors
+				.err(0)
+				.start()
+				.r("I fail because of my callback")
+				.r(function () {
+					console.log("I fail because of my condition is always false")
+				}, false)
+				.r(function () {
+					console.log("I fail because of my condition doesn't return a boolean value")
+				}, function(){
+					return 1;
+				})
+				.t("24")
+				.t(0 - 1)
+				//Register the actual queue
+				.r(function () {
+					console.log("First test\nTime since start: ", new Date().getTime() - d);
+				})
+				.t(1000)
+				.r(function () {
+					console.log("Second test\nTime since start: ", new Date().getTime() - d);
+					d = new Date().getTime();
+				})
+				.t(8)
+				.r(function () {
+					console.log("Third test\nTime since last test: ", new Date().getTime() - d);
+					d = new Date().getTime();
+				}, function () {
+					return new Date().getTime() - d > 1000;
+				})
+				.r(function () {
+					console.log("Fourth test\nTime since last test: ", new Date().getTime() - d);
+					d = new Date().getTime();
+					//Add an extra task to the queue
+					w.r(function(){
+						test = false; //Set to false for next item in queue
+						console.log("Sub test added in original scope\nThis will only be added once its parent test has fired\nTime since last test: ", new Date().getTime() - d);
+						}, function () {
+							return new Date().getTime() - d > 1000;
+						});
+					//Set "test" for the next step
+					test = true;
+				})
+				.r(function () {
+					console.log("Fifth test\nFires when 'test' variable is true\nTime since last test: ", new Date().getTime() - d);
+					//Add an extra task to the queue
+					w.r(function(){
+						console.log("Sub test added in original scope\nThis test will work against the flag set by a previous sub test\nTime since last test: ", new Date().getTime() - d);
+						}, function() {
+							return test != true
+						});
+					console.log("This marks the end of the primary tasks, but there is still", w.queue.length - 1,"tests left.\nThese must have been set as sub queries.");
+				}, function() {return test})
+				return w;
+			})();
+			//Add an extra task in a new scope
+			(function addAnExtraTask(w) {
+				w.r(function(){
+					console.log("Sub test added in new scope\ntypeof d:", typeof d);
+					})
+			})(ourWaiter);
+			//Add an extra task in a new scope
+			(function simulateAjax(w) {
+				var loaded = 0;
+				var amountNeeded = 3;
+				w
+				.r(function(){
+					console.log("Sub test added in new scope\nStarted",amountNeeded,"independent, asynchronous task that the next task depends upon");
+					for (var index = 0; index < amountNeeded; index++) {
+						setTimeout(function(){
+							loaded++;
+						},Math.round(Math.random() * 1000 * 4));
+					}
+				})
+				.r(function(){
+					console.log("Sub test added in new scope\nSimulated that",loaded,"independent AJAX request has returned");
+				},
+				function(){
+					return loaded >= amountNeeded;
+				})
+			})(ourWaiter);
+			ourWaiter.start();
 		</script>
-	</body>
+</body>
+
 </html>
